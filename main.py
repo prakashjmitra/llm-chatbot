@@ -22,7 +22,17 @@ async def read_user_me():
 
 @app.get("/items/")
 async def create_item(item: Item):
-    return item
+    item_dict = item.model_dump()
+    if item.tax is not None:
+        price_with_tax = item.price + item.tax
+        item_dict.update({"price_with_tax": price_with_tax})
+    return item_dict
+
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item, q: str | None = None):
+    return {"item_id": item_id, **item.model_dump()}
+    if q:
+        return {"item_id": item_id, "q": q}
 
 @app.get("/items/{items_id}")
 async def read_item(skip: int = 0, limit : int = 10):
