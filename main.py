@@ -1,7 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel
-from fastapi import FastAPI
-
+from fastapi import FastAPI, Query
+from typing import Annotated 
 
 class Item(BaseModel):
     name: str
