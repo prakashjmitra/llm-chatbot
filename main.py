@@ -1,7 +1,8 @@
 from enum import Enum
 from pydantic import BaseModel
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 from typing import Annotated 
+
 
 class Item(BaseModel):
     name: str
@@ -37,6 +38,13 @@ async def update_item(item_id: int, item: Item, q: str | None = None):
 @app.get("/items/{items_id}")
 async def read_item(skip: int = 0, limit : int = 10):
     return fake_items_db[skip : skip + limit]
+async def read_items(
+    q: str, item_id: Annotated[int, Path(title="The ID of the item to get")]
+):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
 
 @app.get("/models/{model_name}")
 async def get_model(model_name: ModelName):
